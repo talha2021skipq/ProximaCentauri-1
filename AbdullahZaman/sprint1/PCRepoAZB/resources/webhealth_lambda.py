@@ -9,16 +9,18 @@ def lambda_handler(events, context):
 	
 	avail = get_availability()
 	dimensions = [
-		{"Name": "URL", "Value": constants.URL_TO_MONITOR},
-		{"Name": "Region", "Value": "DUB"}
+		{"Name": "URL", "Value": constants.URL_TO_MONITOR}
 		]
+	
 	cw.put_data(constants.URL_MONITOR_NAMESPACE,constants.URL_MONITOR_NAME_Availability, dimensions, avail)
+	
 	latency = get_latency()
 	dimensions = [
-		{"Name": "URL", "Value": constants.URL_TO_MONITOR},
-		{"Name": "Region", "Value": "DUB"}
+		{"Name": "URL", "Value": constants.URL_TO_MONITOR}
 		]
+	
 	cw.put_data(constants.URL_MONITOR_NAMESPACE,constants.URL_MONITOR_NAME_Latency, dimensions, latency)
+	
 	values.update({"availability":avail,"Latency":latency})
 	return values
 
