@@ -12,10 +12,15 @@ This aim of this project to to measure availability and latency of custom list (
 ## Technologies 
 Project is created with 
 * Lambda
-* loudWatch
+* CloudWatch
 * DynamoDB
 * SNS
 * Cloud9
 * S3
 
 ## SetUp
+To run this project, follow these steps 
+### *  Envirement creation on AWS
+First of all login in aws.amazon and create a virtual machine. 
+### *  Insatll requirements
+Then install new version of python (python 3.7) and console (2.1). After this 
