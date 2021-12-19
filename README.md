@@ -52,3 +52,20 @@ $ cdk init app --language python
 
 ### install requirements 
 copy the files and update file in CDK project file. 
+``````
+$ python -m pip install aws-cdk.core==1.135.0
+$ python -m pip install -r requirements.txt
+$ nvm install v16.3.0 && nvm use 16.3.0 && nvm alias default v16.3.0
+$ npm install -g aws-cdk
+$ export PATH=$PATH:$(npm get prefix)/bin
+$ python -m pip install aws-cdk.aws-s3 aws-cdk.aws-lambda
+
+``````
+now all required requirements are done on machine. 
+### Test Code
+To test code run these commands
+``
+$ cdk synth
+$ cdk deploy
+``
+if there is no error you can see the graphs of latency and availability on cludwatch and also you will get notification email when there is alarm trigger.  
