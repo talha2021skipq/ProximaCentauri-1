@@ -2,7 +2,7 @@
 # WebHealth Monitor(Latency & Availability)
 
 ## Table of contents
-* [Project Description](#Project Description)
+* [Project Description](#Project-Description)
 * [Technologies](#technologies)
 * [Setup](#setup)
 
