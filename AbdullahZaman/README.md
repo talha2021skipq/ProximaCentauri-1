@@ -1,6 +1,9 @@
 # SPINT1 : WEBHEALTH STACK
 ## Overview
 Using AWS CDK to measure the availability and latency(delay) of a custom list of websites and monitor the results on a CloudWatch. Then setting up alarms on metrics when the prescribed thresholds are breached. Each alarm is published to SNS notifications which triggers a lambda function that writes the alarm information into DynamoDB.
+<p align="center">
+  <img src="http://material-bread.org/logo-shadow.svg" alt="WebHealth">
+</p>
 ## Configuration Instructions
 * Update Python and aws
 * Use _aws codecommit_ to create a local repository.
@@ -9,5 +12,5 @@ Using AWS CDK to measure the availability and latency(delay) of a custom list of
 * Install the dependencies from _requirements.txt_
 ## Troubleshooting Instructions
 If the _**cdk synth**_ instruction doesn't create CLOUDFORMATION template in the virtual environemt, navigate to the _**.venv/bin**_ directory and execute the following:
-<span style="color:red">python3 -m pip install -r path_to_requirements.txt/requirements.txt</span>
+<p align=center><span style="color:red">python3 -m pip install -r path_to_requirements.txt/requirements.txt</span></p>
 
