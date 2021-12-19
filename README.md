@@ -20,11 +20,11 @@ Project is created with
 
 ## SetUp
 To run this project, follow these steps 
-### *  Environment creation on AWS
+### Environment creation on AWS
 First of all login in aws.amazon and create a virtual machine. 
-### *  Insatll requirements
+### Insatll requirements
 Then install new version of python (python 3.7) and console (2.1).
-### * Create CDK project 
+### Create CDK project 
 create directory of your choice and change directory to new created and then create cdk project using these commands. 
 '''
 $ mkdir IrfanskipQ_Project1
