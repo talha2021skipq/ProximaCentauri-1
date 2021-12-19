@@ -22,16 +22,27 @@ Project is created with
 To run this project, follow these steps 
 ### Environment creation on AWS
 First of all login in aws.amazon and create a virtual machine. 
-### Insatll requirements
-Then install new version of python (python 3.7) and console (2.1).
+### Update Python and AWS 
+check version of python and if it is old version check new version is available then make new version as default version using these commands.
+ ```
+ $python --version
+ $python3 --version
+ $ source ~/.bashrc
+ ```
+ then add this line in bashrc
+ 
 ### Create CDK project 
-Create directory of your choice and change directory to new created and then create cdk project using these commands. 
+create directory of your choice and change directory to new created and then create cdk project using these commands. 
 ```
 $ mkdir IrfanskipQ_Project1
 $ cd IrfanskipQ_Project1
 $ cdk init app --language python
 ```
+add this command
+```
+$alis python='/usr/bin/python3' (press ESC on keybaord)
+$:w! (press Enter on keybaord)
+$:q! (press Enter on keybaord) 
+```
+### install requirements 
 copy the files and update file in CDK project file. 
-### Activate virtual Environment
-Run this command to activate the virtual environment
-`$source .venv/bin/activate`
