@@ -9,5 +9,5 @@ Using AWS CDK to measure the availability and latency(delay) of a custom list of
 * Install the dependencies from _requirements.txt_
 ## Troubleshooting Instructions
 If the _**cdk synth**_ instruction doesn't create CLOUDFORMATION template in the virtual environemt, navigate to the _**.venv/bin**_ directory and execute the following:
-<p align=center>python3 -m pip install -r path_to_requirements.txt/requirements.txt</p>
+<p align=center><span style="color:red">python3 -m pip install -r path_to_requirements.txt/requirements.txt</span></p>
 
