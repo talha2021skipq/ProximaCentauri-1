@@ -5,14 +5,12 @@ from CW_putMetric import CloudWacthPutMetric
 
 def lambda_handler(events, context):
     values=dict()
-
     #creating an instant our CWPM class
     cw=CloudWacthPutMetric();
     avail=get_availability()
     dimensions=[
                 { 'Name':'URL', 'Value':  constants.URL_TO_MONITOR}
             ]
-
     #put the data to CW using put-metric-data(put_data) method
     cw.put_data(constants.URL_MONITOR_NAMESPACE, constants.URL_MONITOR_NAME1A,dimensions,avail )
     #get value of latency

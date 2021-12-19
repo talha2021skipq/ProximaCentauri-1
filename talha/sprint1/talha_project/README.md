@@ -1,9 +1,35 @@
 
-# Welcome to your CDK Python project!
 
-This is a blank project for Python development with CDK.
+# Sprint1: Creation of web health monitoring system
+## Project Summary 
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+In the sprint1 at skipq, we designed a web health monitoring system, that will periodically monitor the web health metrics like latency and availability and
+then raise an alarm when the metrics breach the specified threshold. The rasied alarms will be stored in a dynamodb  table.
+
+## Services Covered
+
+1. AWS Dynamodb
+2. AWS Cloudwatch
+3. S3 buckets
+4. AWS lambda
+5. AWS SNS
+6. AWS events
+7. AWS events target
+
+## Installation Guide
+
+Follow these easy steps to set up the environment ro run the project:
+
+1. Install requirements.txt file using pip install
+2. Do `cdk init --language python` to setup python projet
+3. make sure that there are 7 python files in resources folder nd  python files in project subfolder
+3. In the project directory, perform cdk synth and then cdk deploy
+3. Make sure that there are 7 python files in resources folder nd  python files in project subfolder.
+
+## Author
+
+Talha Naeem... talha.naeem.s@skipq.org
+
 
 This project is set up like a standard Python project.  The initialization
 process also creates a virtualenv within this project, stored under the `.venv`
@@ -56,3 +82,9 @@ command.
  * `cdk docs`        open CDK documentation
 
 Enjoy!
+~
+
+
+
+
+
