@@ -2,7 +2,7 @@
 ## Overview
 Using AWS CDK to measure the availability and latency(delay) of a custom list of websites and monitor the results on a CloudWatch. Then setting up alarms on metrics when the prescribed thresholds are breached. Each alarm is published to SNS notifications which triggers a lambda function that writes the alarm information into DynamoDB.
 <p align="center">
-  <img src="http://material-bread.org/logo-shadow.svg" alt="WebHealth">
+  <img src="https://github.com/abdullah2021skipq/ProximaCentauri/tree/main/AbdullahZaman" alt="WebHealth">
 </p>
 ## Configuration Instructions
 * Update Python and aws
