@@ -7,9 +7,11 @@ from aws_cdk import (
     aws_cloudwatch as cloudwatch_,
     aws_sns as sns,
     aws_sns_subscriptions as subscriptions_,
-    aws_cloudwatch_actions as actions_
+    aws_cloudwatch_actions as actions_,
+    aws_dynamodb as db
 )
 from resources import constants as constants
+from resources import s3bucket
 
 # For consistency with other languages, `cdk` is the preferred import name for
 # the CDK's core module.  The following line also imports it as `core` for use
@@ -22,10 +24,23 @@ class PcRepoAzbStack(cdk.Stack):
 
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+        
+        # s3 bucket
+        s3bucket.store_file("abdullahzamanbucket")
+        s3bucket.read_file("abdullahzamanbucket", "urlsList.txt")
+        
 
+        
         # The code that defines your stack goes here
         lambda_role = self.create_lambda_role()
         hw_lambda = self.create_lambda("FirstHWLambda", "./resources", "webhealth_lambda.lambda_handler", lambda_role)
+        
+        # Create Table
+        dynamo_table = self.create_table("AbdullahTable")
+        
+       # Create lambda
+        db_lambda = self.create_lambda("DynamoLambda", "./resources", "dynamodb_lambda.lambda_handler", lambda_role)
+        dynamo_table.grant_read_write_data(db_lambda)
         # We define the schedule, target and the rule for our lambda
         
         lambda_schedule = events_.Schedule.rate(cdk.Duration.minutes(1))
@@ -35,6 +50,10 @@ class PcRepoAzbStack(cdk.Stack):
         
         topic = sns.Topic(self, "WebHealthTopic")
         topic.add_subscription(subscriptions_.EmailSubscription("abdullah.zaman.babar.s@skipq.org"))
+        
+        #Here we add another topic to add lambda to subscription
+        topic.add_subscription(subscriptions_.LambdaSubscription(fn=db_lambda))
+        
         
         #subscriptions_.EmailSubscription("abdullah.zaman.babar.s@skipq.org")
         
@@ -64,6 +83,7 @@ class PcRepoAzbStack(cdk.Stack):
     
         availability_alarm.add_alarm_action(actions_.SnsAction(topic))
         latency_alarm.add_alarm_action(actions_.SnsAction(topic))
+        
     
     def create_lambda_role(self):
         lambdaRole = aws_iam.Role(self, "lambda-role",
@@ -71,13 +91,22 @@ class PcRepoAzbStack(cdk.Stack):
             managed_policies=[
                 aws_iam.ManagedPolicy.from_aws_managed_policy_name('service-role/AWSLambdaBasicExecutionRole'),
                 aws_iam.ManagedPolicy.from_aws_managed_policy_name('CloudWatchFullAccess'),
+                aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonDynamoDBFullAccess"),            
+                aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonSNSFullAccess")
                 ])
         return lambdaRole
     
+    def create_table(self, t_name):
+        try:
+            return db.Table(self, id="Table", table_name=t_name,
+                        partition_key=db.Attribute(name="AlarmDetails", type=db.AttributeType.STRING))
+        except:
+            pass
+    
     def create_lambda(self, newid, asset, handler, role):
-         return lambda_.Function(self, id = newid,
- 			                    runtime = lambda_.Runtime.PYTHON_3_6,
-			                    handler = handler,
-			                    code = lambda_.Code.asset(asset),
-			                    role=role,
-			                    )
+        return lambda_.Function(self, id = newid,
+                                runtime = lambda_.Runtime.PYTHON_3_6,
+                                handler = handler,
+                                code = lambda_.Code.asset(asset),
+                                role=role,
+    			                    )
