@@ -26,9 +26,9 @@ First of all login in aws.amazon and create a virtual machine.
 Then install new version of python (python 3.7) and console (2.1).
 ### Create CDK project 
 create directory of your choice and change directory to new created and then create cdk project using these commands. 
-'''
+```
 $ mkdir IrfanskipQ_Project1
 $ cd IrfanskipQ_Project1
 $ cdk init app --language python
-'''
+```
 copy the files and update file in CDK project file. 
