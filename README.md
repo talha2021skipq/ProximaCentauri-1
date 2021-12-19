@@ -20,7 +20,10 @@ Project is created with
 
 ## SetUp
 To run this project, follow these steps 
-### *  Envirement creation on AWS
+### *  Environment creation on AWS
 First of all login in aws.amazon and create a virtual machine. 
 ### *  Insatll requirements
-Then install new version of python (python 3.7) and console (2.1). After this 
+Then install new version of python (python 3.7) and console (2.1).
+### * CDK project 
+Then create cdk project using this command. 
+$ cdk init app --language python
