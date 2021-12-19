@@ -25,12 +25,23 @@ First of all login in aws.amazon and create a virtual machine.
 ### Update Python and AWS 
 check version of python and if it is old version check new version is available then make new version as default version using these commands.
  ```
- $python --version
- $python3 --version
+ $ python --version
+ $ python3 --version
  $ source ~/.bashrc
  ```
- then add this line in bashrc
- 
+ then add this line in bashrc file
+```
+$alis python='/usr/bin/python3' (press ESC on keybaord)
+$:w! (press Enter on keybaord)
+$:q! (press Enter on keybaord) 
+```
+check version of aws and then update it to new version using these commands.
+````
+$ aws --version 
+$ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+$ unzip awscliv2.zip
+$ sudo ./aws/install
+````
 ### Create CDK project 
 create directory of your choice and change directory to new created and then create cdk project using these commands. 
 ```
@@ -38,11 +49,6 @@ $ mkdir IrfanskipQ_Project1
 $ cd IrfanskipQ_Project1
 $ cdk init app --language python
 ```
-add this command
-```
-$alis python='/usr/bin/python3' (press ESC on keybaord)
-$:w! (press Enter on keybaord)
-$:q! (press Enter on keybaord) 
-```
+
 ### install requirements 
 copy the files and update file in CDK project file. 
