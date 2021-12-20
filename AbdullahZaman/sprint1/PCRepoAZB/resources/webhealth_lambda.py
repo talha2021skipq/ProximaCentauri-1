@@ -8,6 +8,11 @@ def lambda_handler(events, context):
 	cw = CloudWatchPutMetric()
 	
 	avail = get_availability()
+	
+	"""
+	We provide the Name Value pair for our dimenions
+	to be used as a parameter for put_metric_data to receive a response.
+	""" 
 	dimensions = [
 		{"Name": "URL", "Value": constants.URL_TO_MONITOR}
 		]
