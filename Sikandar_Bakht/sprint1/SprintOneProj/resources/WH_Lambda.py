@@ -12,7 +12,7 @@ def lambda_handler(event,context):
     dimensions=[
         {'Name': 'URL', 'Value': constants.URL_TO_MONITOR}
         ]
-        
+    
     avail = get_availibility()
     CW.put_data(constants.URL_MONITOR_NAMESPACE, constants.URL_MONITOR_NAME_AVAILABILITY, dimensions, avail)
     
