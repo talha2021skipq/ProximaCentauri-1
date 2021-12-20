@@ -34,24 +34,22 @@ class PcRepoAzbStack(cdk.Stack):
         # The code that defines your stack goes here
         lambda_role = self.create_lambda_role()
         hw_lambda = self.create_lambda("FirstHWLambda", "./resources", "webhealth_lambda.lambda_handler", lambda_role)
-        
-        # Create Table
-        dynamo_table = self.create_table("AbdullahTable")
-        
-       # Create lambda
         db_lambda = self.create_lambda("DynamoLambda", "./resources", "dynamodb_lambda.lambda_handler", lambda_role)
-        dynamo_table.grant_read_write_data(db_lambda)
+        
+        
         # We define the schedule, target and the rule for our lambda
         
         lambda_schedule = events_.Schedule.rate(cdk.Duration.minutes(1))
         lambda_target = targets_.LambdaFunction(handler=hw_lambda)
-        rule = events_.Rule(self, "WebHealth_Invocation", description = "Periodic Lambda", 
+        rule = events_.Rule(self, "WebHealth_Invocation", description = "Periodic Lambda",      # rule: which targets will get our event
                             enabled=True, schedule=lambda_schedule, targets=[lambda_target])
+        
+        dynamo_table = self.create_table("AbdullahTable")
+        dynamo_table.grant_read_write_data(db_lambda)
+        # db_lambda.add_environment('table_name',"AbdullahTable")   ##No need for this
         
         topic = sns.Topic(self, "WebHealthTopic")
         topic.add_subscription(subscriptions_.EmailSubscription("abdullah.zaman.babar.s@skipq.org"))
-        
-        #Here we add another topic to add lambda to subscription
         topic.add_subscription(subscriptions_.LambdaSubscription(fn=db_lambda))
         
         
@@ -87,14 +85,28 @@ class PcRepoAzbStack(cdk.Stack):
     
     def create_lambda_role(self):
         lambdaRole = aws_iam.Role(self, "lambda-role",
-            assumed_by=aws_iam.ServicePrincipal('lambda.amazonaws.com'),
+             assumed_by=aws_iam.ServicePrincipal('lambda.amazonaws.com'),
             managed_policies=[
                 aws_iam.ManagedPolicy.from_aws_managed_policy_name('service-role/AWSLambdaBasicExecutionRole'),
-                aws_iam.ManagedPolicy.from_aws_managed_policy_name('CloudWatchFullAccess'),
-                aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonDynamoDBFullAccess"),            
-                aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonSNSFullAccess")
+                aws_iam.ManagedPolicy.from_aws_managed_policy_name('CloudWatchFullAccess')
                 ])
         return lambdaRole
+        
+        """
+            def create_lambda_role(self):
+        lambdaRole=aws_iam.Role(self,"lambda-role",
+        assumed_by=aws_iam.CompositePrincipal(
+            aws_iam.ServicePrincipal("lambda.amazonaws.com"),
+            aws_iam.ServicePrincipal("sns.amazonaws.com")
+            ),
+        managed_policies=[
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name('service-role/AWSLambdaBasicExecutionRole'),
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name('CloudWatchFullAccess'),
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonDynamoDBFullAccess"),
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonSNSFullAccess")
+            ])
+        return lambdaRole
+        """
     
     def create_table(self, t_name):
         try:
