@@ -11,12 +11,3 @@ class S3Bucket:
 
     def dump(self, key, obj):
         return self.bucket.Object(key=key).put(Body=json.dumps(obj))
-
-
-def test_it():
-    jsbucket = S3Bucket("your_bucket_name")
-    org_data = {"test": 12345}
-
-    jsbucket.dump("test/data.json", org_data)
-    read_data = jsbucket.load("test/data.json")
-    assert read_data == org_data

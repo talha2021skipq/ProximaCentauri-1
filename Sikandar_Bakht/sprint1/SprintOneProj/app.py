@@ -6,7 +6,7 @@ from resources.S3bucket import S3Bucket as sb
 from sprint_one_proj.sprint_one_proj_stack import SprintOneProjStack
 
 sb_url = sb('sikandarbakhtskipq')
-URLS_TO_MONITOR = {'URLS':[{'Skipq':"www.skipq.org"}, {'Twitch':"www.twitch.tv"}, {'Python':"www.python.org"}, {'NUST':"nust.edu.pk"}]}
+URLS_TO_MONITOR = {'URLS':[{'Skipq':"www.skipq.org", 'Twitch':"www.twitch.tv", 'Python':"www.python.org", 'NUST':"nust.edu.pk"}]}
 
 sb_url.dump('urls_dict.json', URLS_TO_MONITOR)
 
