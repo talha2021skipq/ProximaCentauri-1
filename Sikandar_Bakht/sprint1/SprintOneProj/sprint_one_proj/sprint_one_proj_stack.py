@@ -1,6 +1,5 @@
 from aws_cdk import (
     core as cdk,
-
     aws_lambda as lambda_,
     aws_events as events_,
     aws_events_targets as targets_,
@@ -32,7 +31,6 @@ class SprintOneProjStack(cdk.Stack):
         lambda_targets = targets_.LambdaFunction(handler=WH_Lambda)
         rule = events_.Rule(self, "webHealth_Invocation", description="Periodic Lambda", enabled=True, schedule=lambda_schedule, targets=[lambda_targets])
         
-        
         #####################################################################################################################
         ##                              Setting Up DynamoDB WebHealth Logging Table                                        ##
         #####################################################################################################################
@@ -58,188 +56,73 @@ class SprintOneProjStack(cdk.Stack):
         K=list(URLS_MONITORED['URLS'][0].keys())
         
         #####################################################################################################################
-        ##                                 Creating Cloudwatch Metrics and Alarms For URL 1                                ##
+        ##                                      Creating Cloudwatch Metrics                                                ##
         #####################################################################################################################
         
-        dimensions = {'URL': URLS_MONITORED['URLS'][0][K[0]]}
+        availability_metric = []
+        latency_metric = []
         
-        #AVAILABILITY METRIC AND ALARM
-        
-        availability_metric_0 = cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
-                        metric_name=constants.URL_MONITOR_NAME_AVAILABILITY,
-                        dimensions_map = dimensions,
-                        period = cdk.Duration.minutes(5),
-                        label = f'{K[0]} Availability Metric')
+        for i in range(len(K)):
+            
+            dimensions = {'URL': URLS_MONITORED['URLS'][0][K[i]]}
+            availability_metric.append(
+                                cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
+                                metric_name=constants.URL_MONITOR_NAME_AVAILABILITY,
+                                dimensions_map = dimensions,
+                                period = cdk.Duration.minutes(5),
+                                label = f'{K[i]} Availability Metric')
+                                )
                         
-        availability_alarm_0 = cloudwatch_.Alarm(self, 
-                        id = f'Sikandar Bakht_{K[0]}_Availability_Alarm',
-                        alarm_description = f"Alarm to monitor availability of {K[0]}",
-                        alarm_name = f'{K[0]} Availability Alarm',
-                        metric = availability_metric_0,
-                        comparison_operator =cloudwatch_.ComparisonOperator.LESS_THAN_THRESHOLD,
-                        datapoints_to_alarm = 1,
-                        evaluation_periods = 1,
-                        threshold = 1)
-    
-    
-        #LATENCY METRIC AND ALARM
+            latency_metric.append(
+                                cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
+                                metric_name=constants.URL_MONITOR_NAME_LATENCY,
+                                dimensions_map = dimensions,
+                                period = cdk.Duration.minutes(1),
+                                label = f'{K[i]} Latency Metric')
+                                )
+      
+        #####################################################################################################################
+        ##                                        Creating Cloudwatch Alarms                                               ##
+        #####################################################################################################################
         
-        latency_metric_0 = cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
-                        metric_name=constants.URL_MONITOR_NAME_LATENCY,
-                        dimensions_map = dimensions,
-                        period = cdk.Duration.minutes(1),
-                        label = f'{K[0]} Latency Metric')
-                        
-        latency_alarm_0 = cloudwatch_.Alarm(self, 
-                        id = f'Sikandar Bakht_{K[0]}_Latency_Alarm',
-                        alarm_description = f"Alarm to monitor latency of {K[0]}",
-                        alarm_name = f'{K[0]} Latency Alarm',
-                        metric = latency_metric_0,
-                        comparison_operator =cloudwatch_.ComparisonOperator.GREATER_THAN_THRESHOLD,
-                        datapoints_to_alarm = 1,
-                        evaluation_periods = 1,
-                        threshold = 0.27)
+        availability_alarm = []
+        latency_alarm = []
         
-        availability_alarm_0.add_alarm_action(actions_.SnsAction(topic))
-        latency_alarm_0.add_alarm_action(actions_.SnsAction(topic))
+        for i in range(len(K)):
+            
+            availability_alarm.append(
+                                    cloudwatch_.Alarm(self, 
+                                    id = f'Sikandar Bakht_{K[i]}_Availability_Alarm',
+                                    alarm_description = f"Alarm to monitor availability of {K[i]}",
+                                    alarm_name = f'{K[i]} Availability Alarm',
+                                    metric = availability_metric[i],
+                                    comparison_operator =cloudwatch_.ComparisonOperator.LESS_THAN_THRESHOLD,
+                                    datapoints_to_alarm = 1,
+                                    evaluation_periods = 1,
+                                    threshold = 1)
+                                    )
+                                    
+            latency_alarm.append(
+                                    cloudwatch_.Alarm(self, 
+                                    id = f'Sikandar Bakht_{K[i]}_Latency_Alarm',
+                                    alarm_description = f"Alarm to monitor latency of {K[i]}",
+                                    alarm_name = f'{K[i]} Latency Alarm',
+                                    metric = latency_metric[i],
+                                    comparison_operator =cloudwatch_.ComparisonOperator.GREATER_THAN_THRESHOLD,
+                                    datapoints_to_alarm = 1,
+                                    evaluation_periods = 1,
+                                    threshold = constants.ALARM_THRESHOLDS[i])
+                                )
         
         #####################################################################################################################
-        ##                                 Creating Cloudwatch Metrics and Alarms For URL 2                                ##
+        ##                                        Adding Cloudwatch Alarms Actions                                         ##
         #####################################################################################################################
-        dimensions = {'URL': URLS_MONITORED['URLS'][0][K[1]]}
         
-        #AVAILABILITY METRIC AND ALARM
-        
-        availability_metric_1 = cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
-                        metric_name=constants.URL_MONITOR_NAME_AVAILABILITY,
-                        dimensions_map = dimensions,
-                        period = cdk.Duration.minutes(5),
-                        label = f'{K[1]} Availability Metric')
-                        
-        availability_alarm_1 = cloudwatch_.Alarm(self, 
-                        id = f'Sikandar Bakht_{K[1]}_Availability_Alarm',
-                        alarm_description = f"Alarm to monitor availability of {K[1]}",
-                        alarm_name = f'{K[1]} Availability Alarm',
-                        metric = availability_metric_1,
-                        comparison_operator =cloudwatch_.ComparisonOperator.LESS_THAN_THRESHOLD,
-                        datapoints_to_alarm = 1,
-                        evaluation_periods = 1,
-                        threshold = 1)
-    
-    
-        #LATENCY METRIC AND ALARM
-        
-        latency_metric_1 = cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
-                        metric_name=constants.URL_MONITOR_NAME_LATENCY,
-                        dimensions_map = dimensions,
-                        period = cdk.Duration.minutes(1),
-                        label = f'{K[1]} Latency Metric')
-                        
-        latency_alarm_1 = cloudwatch_.Alarm(self, 
-                        id = f'Sikandar Bakht_{K[1]}_Latency_Alarm',
-                        alarm_description = f"Alarm to monitor latency of {K[1]}",
-                        alarm_name = f'{K[1]} Latency Alarm',
-                        metric = latency_metric_1,
-                        comparison_operator =cloudwatch_.ComparisonOperator.GREATER_THAN_THRESHOLD,
-                        datapoints_to_alarm = 1,
-                        evaluation_periods = 1,
-                        threshold = 0.22)
-        
-        availability_alarm_1.add_alarm_action(actions_.SnsAction(topic))
-        latency_alarm_1.add_alarm_action(actions_.SnsAction(topic))
-        
-        #####################################################################################################################
-        ##                                 Creating Cloudwatch Metrics and Alarms For URL 3                                ##
-        #####################################################################################################################
-         
-        dimensions = {'URL': URLS_MONITORED['URLS'][0][K[2]]}
-        
-        #AVAILABILITY METRIC AND ALARM
-        
-        availability_metric_2 = cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
-                        metric_name=constants.URL_MONITOR_NAME_AVAILABILITY,
-                        dimensions_map = dimensions,
-                        period = cdk.Duration.minutes(5),
-                        label = f'{K[2]} Availability Metric')
-                        
-        availability_alarm_2 = cloudwatch_.Alarm(self, 
-                        id = f'Sikandar Bakht_{K[2]}_Availability_Alarm',
-                        alarm_description = f"Alarm to monitor availability of {K[2]}",
-                        alarm_name = f'{K[2]} Availability Alarm',
-                        metric = availability_metric_2,
-                        comparison_operator =cloudwatch_.ComparisonOperator.LESS_THAN_THRESHOLD,
-                        datapoints_to_alarm = 1,
-                        evaluation_periods = 1,
-                        threshold = 1)
-    
-    
-        #LATENCY METRIC AND ALARM
-        
-        latency_metric_2 = cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
-                        metric_name=constants.URL_MONITOR_NAME_LATENCY,
-                        dimensions_map = dimensions,
-                        period = cdk.Duration.minutes(1),
-                        label = f'{K[2]} Latency Metric')
-                        
-        latency_alarm_2 = cloudwatch_.Alarm(self, 
-                        id = f'Sikandar Bakht_{K[2]}_Latency_Alarm',
-                        alarm_description = f"Alarm to monitor latency of {K[2]}",
-                        alarm_name = f'{K[2]} Latency Alarm',
-                        metric = latency_metric_2,
-                        comparison_operator =cloudwatch_.ComparisonOperator.GREATER_THAN_THRESHOLD,
-                        datapoints_to_alarm = 1,
-                        evaluation_periods = 1,
-                        threshold = 0.2)
-        
-        availability_alarm_2.add_alarm_action(actions_.SnsAction(topic))
-        latency_alarm_2.add_alarm_action(actions_.SnsAction(topic))
-        
-        
-         #####################################################################################################################
-        ##                                 Creating Cloudwatch Metrics and Alarms For URL 4                                ##
-        #####################################################################################################################
-        dimensions = {'URL': URLS_MONITORED['URLS'][0][K[3]]}
-        
-        #AVAILABILITY METRIC AND ALARM
-        
-        availability_metric_3 = cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
-                        metric_name=constants.URL_MONITOR_NAME_AVAILABILITY,
-                        dimensions_map = dimensions,
-                        period = cdk.Duration.minutes(5),
-                        label = f'{K[3]} Availability Metric')
-                        
-        availability_alarm_3 = cloudwatch_.Alarm(self, 
-                        id = f'Sikandar Bakht_{K[3]}_Availability_Alarm',
-                        alarm_description = f"Alarm to monitor availability of {K[3]}",
-                        alarm_name = f'{K[3]} Availability Alarm',
-                        metric = availability_metric_3,
-                        comparison_operator =cloudwatch_.ComparisonOperator.LESS_THAN_THRESHOLD,
-                        datapoints_to_alarm = 1,
-                        evaluation_periods = 1,
-                        threshold = 1)
-    
-    
-        #LATENCY METRIC AND ALARM
-        
-        latency_metric_3 = cloudwatch_.Metric(namespace = constants.URL_MONITOR_NAMESPACE,
-                        metric_name=constants.URL_MONITOR_NAME_LATENCY,
-                        dimensions_map = dimensions,
-                        period = cdk.Duration.minutes(1),
-                        label = f'{K[3]} Latency Metric')
-                        
-        latency_alarm_3 = cloudwatch_.Alarm(self, 
-                        id = f'Sikandar Bakht_{K[3]}_Latency_Alarm',
-                        alarm_description = f"Alarm to monitor latency of {K[3]}",
-                        alarm_name = f'{K[3]} Latency Alarm',
-                        metric = latency_metric_3,
-                        comparison_operator =cloudwatch_.ComparisonOperator.GREATER_THAN_THRESHOLD,
-                        datapoints_to_alarm = 1,
-                        evaluation_periods = 1,
-                        threshold = 0.8)
-        
-        availability_alarm_3.add_alarm_action(actions_.SnsAction(topic))
-        latency_alarm_3.add_alarm_action(actions_.SnsAction(topic))
-     
+        for i in range(len(K)):
+            
+            availability_alarm[i].add_alarm_action(actions_.SnsAction(topic))
+            latency_alarm[i].add_alarm_action(actions_.SnsAction(topic))
+       
         #####################################################################################################################
         ##                                           Class Method Definitions                                              ##
         #####################################################################################################################
@@ -263,7 +146,6 @@ class SprintOneProjStack(cdk.Stack):
                             aws_iam.ManagedPolicy.from_aws_managed_policy_name('service-role/AWSLambdaBasicExecutionRole'),
                             aws_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonDynamoDBFullAccess'),
                             aws_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSNSFullAccess'),
-                            aws_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonS3FullAccess')
                         ])
             
         return lambdaRole

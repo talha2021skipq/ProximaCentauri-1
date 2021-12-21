@@ -4,16 +4,16 @@ import boto3
 print('Loading function')
 
 def lambda_handler(event, context):
-    
-    print("Received event: " + json.dumps(event, indent=2))
+    '''handles lambda for SNS notification. Performs alarm log update in DynamoDB Table'''
     message = event['Records'][0]['Sns']
-    add_log(message)
+    add_log(message, 'MonitorDB')
     return message
 
 
-def add_log(msg):
+def add_log(msg, table_name):
+    '''Takes: a dict and table name as input, writes to specified table and returns table relevant data'''
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('MonitorDB')
+    table = dynamodb.Table(table_name)
     data = json.loads(msg['Message'])
     response = table.put_item(Item = {'Timestamp': msg['Timestamp'], 
                                     'Alarm Name':data['AlarmName'],
